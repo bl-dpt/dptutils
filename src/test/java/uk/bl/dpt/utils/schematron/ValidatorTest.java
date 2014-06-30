@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 The British Library / The SCAPE Project Consortium
+ * Copyright 2014 The British Library / The SCAPE Project Consortium
  * Authors: Alecs Geuder (alecs.geuder@bl.uk),
  *          William Palmer (William.Palmer@bl.uk)
  *
