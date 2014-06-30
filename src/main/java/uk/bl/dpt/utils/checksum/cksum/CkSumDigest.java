@@ -109,7 +109,6 @@ public class CkSumDigest extends MessageDigestSpi {
 
 	private int gCrc = 0;
 	private int gLength = 0;
-	byte[] gDigest = new byte[4];
 
 	@Override
 	protected void engineUpdate(byte input) {
@@ -128,26 +127,33 @@ public class CkSumDigest extends MessageDigestSpi {
 	@Override
 	protected byte[] engineDigest() {
 
+		// Calculate this for the current state of affairs by making a temporary
+		// copy of the calculated crc so far
+		// Now more data can be updated() and a corresponding crc can be calculated
+		
+		int crc = gCrc;
+
 		for (; gLength > 0; gLength >>= 8) {
-			gCrc = cksumconst[(gCrc>>24^gLength) &0xff] ^ gCrc<<8;
+			crc = cksumconst[(crc>>24^gLength) &0xff] ^ crc<<8;
 		}
-		
-		gCrc = ~gCrc;
-	
+
+		crc = ~crc;
+
+		byte[] digest = new byte[4];
+
 		/* write result in big endian */
-		gDigest[0] = (byte) (gCrc >> 24);
-		gDigest[1] = (byte) (gCrc >> 16);
-		gDigest[2] = (byte) (gCrc >> 8);
-		gDigest[3] = (byte) (gCrc >> 0);
-		
-		return gDigest;
+		digest[0] = (byte) (crc >> 24);
+		digest[1] = (byte) (crc >> 16);
+		digest[2] = (byte) (crc >> 8);
+		digest[3] = (byte) (crc >> 0);
+
+		return digest;
 	}
 
 	@Override
 	protected void engineReset() {
 		gCrc = 0;
 		gLength = 0;
-		gDigest = new byte[4];
 	}
 
 }
