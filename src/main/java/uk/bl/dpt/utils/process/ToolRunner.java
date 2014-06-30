@@ -17,13 +17,15 @@
 
 package uk.bl.dpt.utils.process;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 
 /**
  * This class runs an external tool via command line until it exits or stop() is called
@@ -32,7 +34,7 @@ import org.apache.log4j.Logger;
  */
 public class ToolRunner {
 
-	private Logger gLogger = Logger.getLogger(ToolRunner.class);
+	private Logger gLogger = LoggerFactory.getLogger(ToolRunner.class);
 
 	private Process gProcess;
 	private Thread gDrainer;

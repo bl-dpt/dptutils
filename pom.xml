@@ -6,11 +6,20 @@
 	<packaging>jar</packaging>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>British Library Digital Preservation Team Utility Library</name>
+
 	<properties>
 		<mainclass></mainclass>
 		<!-- <tika.version>1.5</tika.version> -->
 		<jdk.version>1.6</jdk.version>
+        <guava.version>17.0</guava.version>
+        <junit.version>4.11</junit.version>
+        <logback.version>1.1.1</logback.version>
+        <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
+        <maven-jar-plugin.version>2.4</maven-jar-plugin.version>
+        <maven-eclipse-plugin.version>2.9</maven-eclipse-plugin.version>
+        <slf4j.version>1.7.6</slf4j.version>
 	</properties>
+
 	<repositories>
 		<repository>
 			<id>apache snapshots</id>
@@ -27,22 +36,32 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.10</version>
+			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.5.6</version>
-			<scope>compile</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
 	</dependencies>
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.0.2</version>
+                <version>${maven-compiler-plugin.version}</version>
 				<configuration>
 					<source>${jdk.version}</source>
 					<target>${jdk.version}</target>
@@ -51,7 +70,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.4</version>
+                <version>${maven-jar-plugin.version}</version>
 				<configuration>
 					<archive>
 						<manifest>
@@ -65,7 +84,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-eclipse-plugin</artifactId>
-				<version>2.9</version>
+				<version>${maven-eclipse-plugin.version}</version>
 				<configuration>
 					<useProjectReferences>false</useProjectReferences>
 				</configuration>
@@ -90,6 +109,13 @@
 			<id>willp-bl</id>
 			<name>William Palmer</name>
 			<email>william.palmer@bl.uk</email>
+			<organization>British Library</organization>
+			<timezone>0</timezone>
+		</developer>
+        <developer>
+			<id>alecsgeuder-bl</id>
+			<name>Alecs Geuder</name>
+			<email>alecs.geuder@bl.uk</email>
 			<organization>British Library</organization>
 			<timezone>0</timezone>
 		</developer>

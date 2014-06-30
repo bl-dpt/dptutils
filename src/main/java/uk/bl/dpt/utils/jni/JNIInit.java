@@ -21,8 +21,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 
-import org.apache.log4j.Logger;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import uk.bl.dpt.utils.util.ResourceUtil;
 import uk.bl.dpt.utils.util.StreamUtil;
 
@@ -34,7 +34,7 @@ public class JNIInit {
 
 	private JNIInit() {}
 	
-	private static Logger gLogger = Logger.getLogger(JNIInit.class);
+	private static Logger gLogger = LoggerFactory.getLogger(JNIInit.class);
 	
 	//////////////////////////////////////////////////////////////
 	

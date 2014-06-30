@@ -29,8 +29,9 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.util.zip.CRC32;
 
-import org.apache.log4j.Logger;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import uk.bl.dpt.utils.checksum.cksum.CkSumProvider;
 
 /**
@@ -41,7 +42,7 @@ import uk.bl.dpt.utils.checksum.cksum.CkSumProvider;
 public class ChecksumUtil {
 
 	@SuppressWarnings("unused")
-	private static Logger gLogger = Logger.getLogger(ChecksumUtil.class);
+	private static Logger gLogger = LoggerFactory.getLogger(ChecksumUtil.class);
 	
 	private final static int BUFSIZE = 32768;
 	

@@ -25,7 +25,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.GZIPInputStream;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Utility methods for working with streams
@@ -35,7 +36,7 @@ import org.apache.log4j.Logger;
 public class StreamUtil {
 
 	@SuppressWarnings("unused")
-	private static Logger gLogger = Logger.getLogger(StreamUtil.class);
+	private static Logger gLogger = LoggerFactory.getLogger(StreamUtil.class);
 	
 	private StreamUtil() {}
 	

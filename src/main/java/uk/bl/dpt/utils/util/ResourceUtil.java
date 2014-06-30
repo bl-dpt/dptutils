@@ -17,12 +17,14 @@
 
 package uk.bl.dpt.utils.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-import org.apache.log4j.Logger;
 
 /**
  * Utility methods for using resources
@@ -31,7 +33,7 @@ import org.apache.log4j.Logger;
  */
 public class ResourceUtil {
 
-	private static Logger gLogger = Logger.getLogger(ResourceUtil.class);
+	private static Logger gLogger = LoggerFactory.getLogger(ResourceUtil.class);
 	
 	private static final String RESOURCES_DIR = "src/main/resources/";
 	

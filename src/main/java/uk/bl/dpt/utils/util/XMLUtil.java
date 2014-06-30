@@ -31,7 +31,8 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
@@ -43,7 +44,7 @@ import org.xml.sax.SAXException;
 public class XMLUtil {
 
 	@SuppressWarnings("unused")
-	private static Logger gLogger = Logger.getLogger(XMLUtil.class);
+	private static Logger gLogger = LoggerFactory.getLogger(XMLUtil.class);
 	
 	private XMLUtil() {}
 	
