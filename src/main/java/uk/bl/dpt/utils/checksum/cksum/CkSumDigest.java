@@ -132,9 +132,10 @@ public class CkSumDigest extends MessageDigestSpi {
 		// Now more data can be updated() and a corresponding crc can be calculated
 		
 		int crc = gCrc;
+		int len = gLength;
 
-		for (; gLength > 0; gLength >>= 8) {
-			crc = cksumconst[(crc>>24^gLength) &0xff] ^ crc<<8;
+		for (; len > 0; len >>= 8) {
+			crc = cksumconst[(crc>>24^len) &0xff] ^ crc<<8;
 		}
 
 		crc = ~crc;
@@ -142,10 +143,10 @@ public class CkSumDigest extends MessageDigestSpi {
 		byte[] digest = new byte[4];
 
 		/* write result in big endian */
-		digest[0] = (byte) (crc >> 24);
-		digest[1] = (byte) (crc >> 16);
-		digest[2] = (byte) (crc >> 8);
-		digest[3] = (byte) (crc >> 0);
+		digest[0] = (byte) ((crc >> 24) &0xff);
+		digest[1] = (byte) ((crc >> 16) &0xff);
+		digest[2] = (byte) ((crc >> 8)  &0xff);
+		digest[3] = (byte) ((crc >> 0)  &0xff);
 
 		return digest;
 	}
