@@ -2,6 +2,8 @@ dptutils
 ========
  
 A set of utility methods.
+
+Build Status: [![Build Status](https://travis-ci.org/bl-dpt/dptutils.svg)](https://travis-ci.org/bl-dpt/dptutils)
  
 This library contains utility methods for:
  * Checksumming (calculating and diffing)
