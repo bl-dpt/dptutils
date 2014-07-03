@@ -50,7 +50,7 @@ public class ValidatorFactory {
 
     DOMSource doc;
 
-    private Map<String, String> assertPatternMap = new HashMap<String,String>();
+    private LinkedHashMap<String, String> assertPatternMap = new LinkedHashMap<String,String>();
 
     /**
      * The namespace for Schematron schemas
@@ -254,7 +254,7 @@ public class ValidatorFactory {
     }
 
     @SuppressWarnings("unused")
-    public Map<String, String> getAssertPatternMap(StreamSource schemaInput, Set<String> patternFilter) throws ParserConfigurationException, SAXException, IOException, XPathExpressionException, TransformerException {
+    public LinkedHashMap<String, String> getAssertPatternMap(StreamSource schemaInput, Set<String> patternFilter) throws ParserConfigurationException, SAXException, IOException, XPathExpressionException, TransformerException {
         if (assertPatternMap.size() == 0) {
             schToXSLT(filterPatterns(toDoc(schemaInput), patternFilter));
         }

@@ -17,10 +17,10 @@
 
 package uk.bl.dpt.utils.util;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 @SuppressWarnings("serial")
-public class InvertedDict extends HashMap<String, Integer> {
+public class InvertedDict extends LinkedHashMap<String, Integer> {
 
 	public void update(String s) {
 		this.put(s, (this.get(s) == null) ? 1 : this.get(s) + 1);
