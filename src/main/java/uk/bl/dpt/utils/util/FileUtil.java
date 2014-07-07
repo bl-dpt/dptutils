@@ -20,7 +20,11 @@ package uk.bl.dpt.utils.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Reader;
 import java.util.List;
 
 
@@ -90,5 +94,21 @@ public class FileUtil {
 		return ret;
 	}
 	
+	/**
+	 * Copies an inputstream to a file
+	 * @param pBuffer buffer to read
+	 * @param pFile local file to write to
+	 * @throws IOException if an error occurred
+	 */
+	public static void writeReaderToFile(Reader pBuffer, File pFile) throws IOException {
+		BufferedWriter out = new BufferedWriter(new FileWriter(pFile));
+		char[] readBuffer = new char[32768];
+		int bytesRead = 0;
+		while(pBuffer.ready()) {
+			bytesRead = pBuffer.read(readBuffer);
+			out.write(readBuffer, 0, bytesRead);
+		}
+		out.close();
+	}
 	
 }
