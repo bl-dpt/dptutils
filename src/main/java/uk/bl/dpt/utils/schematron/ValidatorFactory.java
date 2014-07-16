@@ -75,7 +75,6 @@ public class ValidatorFactory {
      * @param schematronSXLTFilePath The path to the XSLT file.
      * @throws java.io.IOException
      */
-    @SuppressWarnings("unused")
     public ValidatorFactory(String schematronSXLTFilePath) throws IOException {
         this.schXSLTFile = new File(schematronSXLTFilePath);
         if (schXSLTFile.exists()) {
@@ -247,13 +246,11 @@ public class ValidatorFactory {
         return new Validator(schToXSLT(filterPatterns(toDoc(schemaInput), patternFilter)), assertPatternMap);
     }
 
-    @SuppressWarnings("unused")
     public Collection<String> getPatternNames(StreamSource schemaInput, Set<String> patternFilter) throws ParserConfigurationException, SAXException, IOException, XPathExpressionException {
         filterPatterns(toDoc(schemaInput), patternFilter);
         return new LinkedHashSet<String>(assertPatternMap.values());
     }
 
-    @SuppressWarnings("unused")
     public LinkedHashMap<String, String> getAssertPatternMap(StreamSource schemaInput, Set<String> patternFilter) throws ParserConfigurationException, SAXException, IOException, XPathExpressionException, TransformerException {
         if (assertPatternMap.size() == 0) {
             schToXSLT(filterPatterns(toDoc(schemaInput), patternFilter));

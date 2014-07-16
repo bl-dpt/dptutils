@@ -95,7 +95,6 @@ public class ValidatorTest {
     /**
      * Tests an XML document that is expected to pass the validation.
      *
-     * @return
      * @throws java.io.IOException
      * @throws javax.xml.transform.TransformerException
      * @throws org.xml.sax.SAXException
@@ -131,7 +130,6 @@ public class ValidatorTest {
      * Creates a file in which the order of `Gender` and `Name` is opposite of
      * how expected.
      *
-     * @return
      * @throws java.io.IOException
      * @throws javax.xml.transform.TransformerException
      * @throws javax.xml.parsers.ParserConfigurationException
@@ -170,7 +168,6 @@ public class ValidatorTest {
      * Creates a file where a `Person` is called "Mr" but has their `Gender` set as Male,
      * which according to the very un-queer condition in the schema file is expected to fail.
      *
-     * @return
      * @throws java.io.IOException
      * @throws javax.xml.transform.TransformerException
      * @throws javax.xml.parsers.ParserConfigurationException
@@ -213,7 +210,6 @@ public class ValidatorTest {
      * (3) no Name element violates 'must have Name and Gender'
      * (4) no Name element violates the order constraint 'Name before Gender'
      *
-     * @return
      * @throws java.io.IOException
      * @throws javax.xml.transform.TransformerException
      * @throws javax.xml.parsers.ParserConfigurationException

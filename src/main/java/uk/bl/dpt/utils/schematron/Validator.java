@@ -99,8 +99,12 @@ public class Validator {
      * information whether the result is valid.
      *
      * @param source The source to validate
+     * @param outputFile 
      * @return boolean
      * @throws javax.xml.transform.TransformerException
+     * @throws IOException 
+     * @throws ParserConfigurationException 
+     * @throws SAXException 
      */
     public boolean validate(Source source, File outputFile) throws TransformerException, IOException, ParserConfigurationException, SAXException {
         ByteArrayOutputStream output = validate(source);
@@ -156,7 +160,6 @@ public class Validator {
     }
 
     // Getters&Setters
-    @SuppressWarnings("unused")
     public Set<String> getFailureFilter() {
         return failureFilter;
     }
