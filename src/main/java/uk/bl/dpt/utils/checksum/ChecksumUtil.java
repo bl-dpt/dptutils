@@ -18,20 +18,23 @@
 package uk.bl.dpt.utils.checksum;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.util.zip.CRC32;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import uk.bl.dpt.utils.checksum.cksum.CkSumProvider;
 
 /**
@@ -60,6 +63,7 @@ public class ChecksumUtil {
 			calcChecksums(new FileInputStream(pFile), pChecksums);
 	}
 	
+
 	/**
 	 * Calculate a set of checksums for a file just using JDK libraries (and some classes in this package)
 	 * This method only needs to read through the file once to generate all the checksums.
@@ -68,6 +72,46 @@ public class ChecksumUtil {
 	 * @param pChecksums List that calculated checksums will be stored in
 	 */
 	public static void calcChecksums(InputStream pInputStream, Map<String, String> pChecksums) {
+		try {
+			copyAndChecksum(pInputStream, pChecksums, null);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+
+	/**
+	 * Calculate a set of checksums for a file just using JDK libraries (and some classes in this package)
+	 * This method only needs to read through the file once to generate all the checksums.
+	 * Currently generates: "cksum CRC", CRC32, MD5, SHA-1 and SHA-256
+	 * @param pInputStream File to check
+	 * @param pChecksums List that calculated checksums will be stored in
+	 * @param pOutputFile file to copy data to
+	 * @param pOverwrite whether or not to overwrite the file
+	 * @param pOutput output stream to write data to
+	 * @throws IOException if there is an issue flushing the output stream
+	 */
+	public static void copyAndChecksum(InputStream pInputStream, Map<String, String> pChecksums, File pOutputFile, boolean pOverwrite) throws IOException {
+		if(pOutputFile.getAbsoluteFile().exists()&(pOverwrite==false)) {
+			return;
+		}
+		FileOutputStream fos = new FileOutputStream(pOutputFile);
+		copyAndChecksum(pInputStream, pChecksums, fos);
+		fos.flush();
+		fos.close();
+	}
+	
+	/**
+	 * Calculate a set of checksums for a file just using JDK libraries (and some classes in this package)
+	 * This method only needs to read through the file once to generate all the checksums.
+	 * Currently generates: "cksum CRC", CRC32, MD5, SHA-1 and SHA-256
+	 * @param pInputStream File to check
+	 * @param pChecksums List that calculated checksums will be stored in
+	 * @param pOutputStream output stream to write data to
+	 * @throws IOException if there is an issue flushing the output stream
+	 */
+	public static void copyAndChecksum(InputStream pInputStream, Map<String, String> pChecksums, OutputStream pOutputStream) throws IOException {
 		
 		CkSumProvider.register();
 		
@@ -94,6 +138,10 @@ public class ChecksumUtil {
 		boolean readError = false;
 		InputStream original = null;
 		original = new BufferedInputStream(pInputStream);
+		OutputStream bos = null;
+		if(pOutputStream!=null) {
+			bos = new BufferedOutputStream(pOutputStream);
+		}
 		
 		// Create a chain of DigestInputStreams that consume the original InputStream.
 		// Ensure a reference is kept to each DigestInputStream so the digests can be
@@ -118,6 +166,9 @@ public class ChecksumUtil {
 				// digest needs to be calculated
 				int read = top.read(buf);
 				crc32.update(buf, 0, read);
+				if(bos!=null) {
+					bos.write(buf, 0, read);
+				}
 			}
 		} catch (IOException e) {
 			readError = true;
@@ -143,6 +194,10 @@ public class ChecksumUtil {
 			}
 		}
 
+		if(bos!=null) {
+			bos.flush();
+		}
+		
 		// Clean up, close original inputstream if it is still open
 		if(original!=null) {
 			try {
