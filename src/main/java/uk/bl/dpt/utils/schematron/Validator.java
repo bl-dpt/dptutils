@@ -35,6 +35,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import java.io.*;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Set;
 
@@ -51,18 +52,18 @@ public class Validator {
      */
     private static final String namespace = "http://purl.oclc.org/dsdl/svrl";
 
-    private byte[] xslt;
-    LinkedHashMap<String, String> assertPatternMap;
+    private final byte[] xslt;
+    private final LinkedHashMap<String, String> assertPatternMap;
 
     /**
      * A collection of Strings that represents the assertion failures of interest.
      * On how to this is used see also the tests
      */
-    private Set<String> failureFilter;
+    private Set<String> failureFilter = null;
     private LinkedHashMap<String, InvertedDict> report;
 
     public Validator(byte[] aXslt, LinkedHashMap<String, String> aPMap) {
-        this.xslt = aXslt;
+        this.xslt = aXslt.clone();
         this.assertPatternMap = aPMap;
         report = new LinkedHashMap<String, InvertedDict>();
         // initialise the report with all patterns we want to report on
@@ -99,8 +100,8 @@ public class Validator {
      * information whether the result is valid.
      *
      * @param source The source to validate
-     * @param outputFile 
-     * @return boolean
+     * @param outputFile where to write the results
+     * @return a boolean whether the result is valid or not
      * @throws javax.xml.transform.TransformerException
      * @throws IOException 
      * @throws ParserConfigurationException 

@@ -45,10 +45,10 @@ public class ValidatorFactory {
 
     private static final Logger logger = LoggerFactory.getLogger(ValidatorFactory.class);
 
-    private byte[] schXSLT;
-    private File schXSLTFile;
+    private byte[] schXSLT = null;
+    private File schXSLTFile = null;
 
-    DOMSource doc;
+    private DOMSource doc = null;
 
     private LinkedHashMap<String, String> assertPatternMap = new LinkedHashMap<String,String>();
 
@@ -108,7 +108,7 @@ public class ValidatorFactory {
      * Implement a URIResolver so that XSL files can be found in the jar resources
      * @author wpalmer
      */
-    public static class ResourceResolver implements URIResolver {
+    private static class ResourceResolver implements URIResolver {
         public StreamSource resolve(String pRef, String pBase) {
             return new StreamSource(ResourceResolver.class.getClassLoader().getResourceAsStream("iso-schematron/"+pRef));
         }
@@ -205,6 +205,14 @@ public class ValidatorFactory {
         return this.doc;
     }
 
+    /**
+     * Parses the original StreamSource into {@link Document} form .
+     * @param original
+     * @return the dom Document
+     * @throws IOException
+     * @throws SAXException
+     * @throws ParserConfigurationException
+     */
     private Document toDoc(StreamSource original) throws IOException, SAXException, ParserConfigurationException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setNamespaceAware(true); // need this in order to call doc.getElementsByTagNameNS later
@@ -212,15 +220,53 @@ public class ValidatorFactory {
         return dB.parse(original.getInputStream());
     }
 
-    public Validator newValidator(String schemaPath) throws TransformerException, IOException, SAXException, ParserConfigurationException, XPathExpressionException {
+    /**
+     * Create a new {@link Validator} based on the path to the schematron schema
+     *
+     * @param schemaPath the path to the schematron schema file
+     *
+     * @return a new Validator instance
+     * @throws javax.xml.transform.TransformerException
+     * @throws java.io.IOException
+     * @throws org.xml.sax.SAXException
+     * @throws javax.xml.parsers.ParserConfigurationException
+     * @throws javax.xml.xpath.XPathExpressionException
+     */    public Validator newValidator(String schemaPath) throws TransformerException, IOException, SAXException, ParserConfigurationException, XPathExpressionException {
         return newValidator(new StreamSource(new FileInputStream(schemaPath)));
     }
 
-    public Validator newValidator(StreamSource schemaInput) throws TransformerException, IOException, SAXException, ParserConfigurationException, XPathExpressionException {
+    /**
+     * Create a new {@link Validator} providing a schematron schema input source
+     *
+     * @param schemaInput the input containing the schematron schema (the
+     * 'policy')
+     * @return a new Validator instance
+     * @throws javax.xml.transform.TransformerException
+     * @throws java.io.IOException
+     * @throws org.xml.sax.SAXException
+     * @throws javax.xml.parsers.ParserConfigurationException
+     * @throws javax.xml.xpath.XPathExpressionException
+     */    public Validator newValidator(StreamSource schemaInput) throws TransformerException, IOException, SAXException, ParserConfigurationException, XPathExpressionException {
         return newValidator(schemaInput, null);
     }
 
-    public Validator newValidator(String schemaPath, Set<String> patternFilter) throws TransformerException, IOException, SAXException, ParserConfigurationException, XPathExpressionException {
+    /**
+     * Create a new {@link Validator} providing a schematron schema input and a
+     * pattern filter.
+     *
+     * @param schemaPath the path to the schematron schema file
+     * @param patternFilter contains a set of strings, each representing a
+     *        pattern element in the schematron schema; all patterns of which the
+     *        name is not mentioned will be ignored. <br>
+     *        NOTE: patternFilter can be null, in this case all patterns will be
+     *              taken into account
+     * @return a new Validator instance
+     * @throws javax.xml.transform.TransformerException
+     * @throws java.io.IOException
+     * @throws org.xml.sax.SAXException
+     * @throws javax.xml.parsers.ParserConfigurationException
+     * @throws javax.xml.xpath.XPathExpressionException
+     */    public Validator newValidator(String schemaPath, Set<String> patternFilter) throws TransformerException, IOException, SAXException, ParserConfigurationException, XPathExpressionException {
         return newValidator(new StreamSource(new FileInputStream(schemaPath)), patternFilter);
     }
 
@@ -246,15 +292,49 @@ public class ValidatorFactory {
         return new Validator(schToXSLT(filterPatterns(toDoc(schemaInput), patternFilter)), assertPatternMap);
     }
 
+    /**
+     * Gets a collection of pattern names for a given schematron schema.
+     *
+     * @param schemaInput the source of the schematron schema
+     * @param patternFilter contains a set of strings, each representing a
+     *        pattern element in the schematron schema; all patterns of which the
+     *        name is not mentioned will be ignored. <br>
+     *        NOTE: patternFilter can be null, in this case all patterns will be
+     *              taken into account
+     * @return a Collection of String containing the pattern names
+     *
+     * @throws ParserConfigurationException
+     * @throws SAXException
+     * @throws IOException
+     * @throws XPathExpressionException
+     */
     public Collection<String> getPatternNames(StreamSource schemaInput, Set<String> patternFilter) throws ParserConfigurationException, SAXException, IOException, XPathExpressionException {
         filterPatterns(toDoc(schemaInput), patternFilter);
         return new LinkedHashSet<String>(assertPatternMap.values());
     }
 
-    public LinkedHashMap<String, String> getAssertPatternMap(StreamSource schemaInput, Set<String> patternFilter) throws ParserConfigurationException, SAXException, IOException, XPathExpressionException, TransformerException {
+    /**
+     * Gets the {@link #assertPatternMap}, a reversed dictionary linking schematron tests
+     * to schematron patterns (categories)
+     *
+     * @param schemaInput the source of the schematron schema
+     * @param patternFilter contains a set of strings, each representing a
+     *        pattern element in the schematron schema; all patterns of which the
+     *        name is not mentioned will be ignored. <br>
+     *        NOTE: patternFilter can be null, in this case all patterns will be
+     *              taken into account
+     * @return A HashMap linking the test names (Strings) to the category names (Strings)
+     *
+     * @throws ParserConfigurationException
+     * @throws SAXException
+     * @throws IOException
+     * @throws XPathExpressionException
+     * @throws TransformerException
+     */
+    public Map<String,String> getAssertPatternMap(StreamSource schemaInput, Set<String> patternFilter) throws ParserConfigurationException, SAXException, IOException, XPathExpressionException, TransformerException {
         if (assertPatternMap.size() == 0) {
             schToXSLT(filterPatterns(toDoc(schemaInput), patternFilter));
         }
-        return assertPatternMap;
+        return Collections.unmodifiableMap(assertPatternMap);
     }
 }
