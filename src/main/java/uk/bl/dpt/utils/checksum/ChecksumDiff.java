@@ -163,10 +163,20 @@ public class ChecksumDiff {
 					Iterator<String> valuesB = pChecksumSetB.get(key).iterator();
 					while(valuesB.hasNext()) {
 						String b = valuesB.next();
-						if(new File(a).getName().equalsIgnoreCase(new File(b).getName())) {
-							// we have a match - remove filenames from both lists and continue
-							valuesA.remove();
-							valuesB.remove();
+						if(a==null||b==null) {
+							if(a==null&&b==null) {
+								// we have a match - remove filenames from both lists and continue
+								valuesA.remove();
+								valuesB.remove();		
+							} else {
+								// names don't match - one is null, continue
+							}
+						} else {
+							if(new File(a).getName().equalsIgnoreCase(new File(b).getName())) {
+								// we have a match - remove filenames from both lists and continue
+								valuesA.remove();
+								valuesB.remove();
+							}
 						}
 					}
 				}
@@ -215,8 +225,8 @@ public class ChecksumDiff {
 		removeDuplicates(checksumSetA, checksumSetB);
 		// Is this step strictly necessary?
 		// -> Unit testing says it's not (yay for unit testing!)
-//		out("Removing duplicates (2)");
-//		removeDuplicates(checksumSetB, checksumSetA);
+		//		out("Removing duplicates (2)");
+		//		removeDuplicates(checksumSetB, checksumSetA);
 
 		out("Finished");
 		printEntries(pFileA, checksumSetA);
@@ -287,7 +297,7 @@ public class ChecksumDiff {
 	public static void compare(File pFileA, File pFileB, File pReportFile) throws IOException {
 		checksumSetA = new TreeMap<String, ArrayList<String>>();
 		checksumSetB = new TreeMap<String, ArrayList<String>>();
-		
+
 		if(pReportFile!=null) {
 			printWriter = new PrintWriter(new FileWriter(pReportFile));
 		} else {

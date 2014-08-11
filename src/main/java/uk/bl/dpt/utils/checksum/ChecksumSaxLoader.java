@@ -33,6 +33,7 @@ public class ChecksumSaxLoader extends DefaultHandler {
     private String gFile = null;
     private String gText = null;
     private String gChecksum = "SHA-256";
+    private final String NAMEKEY = "file";
 
     /**
      * @param pChecksumMap
@@ -61,7 +62,7 @@ public class ChecksumSaxLoader extends DefaultHandler {
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         super.startElement(uri, localName, qName, attributes);
-        if(qName.equals("name")) {
+        if(qName.equals(NAMEKEY)) {
             gText = "";
             return;
         }
@@ -83,15 +84,23 @@ public class ChecksumSaxLoader extends DefaultHandler {
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         super.endElement(uri, localName, qName);
-        if(qName.equals("name")&&gText!=null) {
-            gFile = gText.trim();
-            gText = null;
-            return;
-        }
-        if(qName.equals("checksum")&&gText!=null) {
-            ChecksumDiff.addChecksum(gText.trim(), gFile, gChecksumMap);
-            gText = null;
-            gFile = null;
+        if(gText!=null) {
+        	if(qName.equals(NAMEKEY)) {
+        		// set filename key and continue
+        		gFile = gText.trim();
+        		gText = null;
+        		return;
+        	} else {
+        		if(qName.equals("checksum")) {
+        			// we should have a filename and checksum at this point
+        			if(gFile==null) {
+        				System.err.println("filename null");
+        			}
+        			ChecksumDiff.addChecksum(gText.trim(), gFile, gChecksumMap);
+        			gText = null;
+        			gFile = null;
+        		}
+        	}
         }
     }
 
