@@ -4,7 +4,7 @@
 	<groupId>uk.bl.dpt</groupId>
 	<artifactId>dptutils</artifactId>
 	<packaging>jar</packaging>
-	<version>0.0.2</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<name>British Library Digital Preservation Team Utility Library</name>
 
 	<properties>
